@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PJJ Koding dan KA Kelas IX - MTsN 6 Pesisir Selatan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p:#4f46e5; --p2:#7c3aed; --acc:#06b6d4; --ok:#10b981; --bad:#ef4444; --warn:#f59e0b;
+  --ink:#1e1b4b; --mute:#64748b; --line:#e2e8f0; --bg:#f1f5ff; --card:#ffffff;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:'Poppins','Segoe UI',Tahoma,sans-serif; color:var(--ink); line-height:1.65;
+  background:radial-gradient(1200px 500px at 10% -10%,#e0e7ff 0,transparent 60%),radial-gradient(900px 500px at 100% 0,#cffafe 0,transparent 55%),var(--bg);
+  min-height:100vh; padding-bottom:60px;
+  -webkit-user-select:none; -ms-user-select:none; user-select:none; -webkit-touch-callout:none;
+}
+/* Input tetap boleh diketik (penting untuk iOS Safari) */
+input[type=text],input[type=password],select{-webkit-user-select:text;user-select:text}
+
+/* ---------- HEADER ---------- */
+header{
+  background:linear-gradient(135deg,#312e81 0%,#4f46e5 55%,#7c3aed 100%); color:#fff;
+  padding:22px 16px 70px; text-align:center; position:relative; overflow:hidden;
+}
+header::before,header::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.08)}
+header::before{width:220px;height:220px;left:-60px;top:-80px}
+header::after{width:300px;height:300px;right:-90px;bottom:-160px}
+header h1{margin:0;font-size:1.55rem;font-weight:800;letter-spacing:.2px;position:relative}
+header p{margin:4px 0 0;font-size:.88rem;opacity:.9;position:relative}
+.badge-ai{display:inline-block;margin-bottom:8px;padding:3px 12px;border-radius:999px;background:rgba(255,255,255,.18);font-size:.72rem;font-weight:600;letter-spacing:1px;position:relative}
+
+/* ---------- LAYOUT ---------- */
+.container{max-width:820px;margin:-48px auto 0;width:92%;position:relative;z-index:2}
+.card{background:var(--card);border-radius:22px;padding:26px;box-shadow:0 12px 40px rgba(49,46,129,.12);margin-bottom:18px}
+.step{display:none;animation:rise .45s ease both}
+.step.active{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+h2.title{margin:0 0 6px;font-size:1.35rem;font-weight:700}
+.sub{color:var(--mute);margin:0 0 18px;font-size:.92rem}
+
+/* ---------- STEPPER + HUD ---------- */
+#hud{display:none;margin-bottom:16px}
+#hud .row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+#student-info{font-weight:600;font-size:.92rem}
+.chip{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;font-weight:700;font-size:.82rem;padding:5px 12px;border-radius:999px;box-shadow:0 2px 8px rgba(245,158,11,.25)}
+.stepper{display:flex;gap:6px;margin-top:12px}
+.stepper div{flex:1;text-align:center;font-size:.68rem;font-weight:600;color:var(--mute)}
+.stepper div i{display:block;height:6px;border-radius:6px;background:var(--line);margin-bottom:5px;transition:.4s}
+.stepper div.done i{background:var(--ok)}
+.stepper div.now i{background:linear-gradient(90deg,var(--p),var(--acc))}
+.stepper div.now{color:var(--p)}
+
+/* ---------- BUTTONS ---------- */
+.btn{
+  display:block;width:100%;border:0;cursor:pointer;margin-top:16px;padding:14px 20px;border-radius:14px;
+  font:600 1rem 'Poppins',sans-serif;color:#fff;background:linear-gradient(135deg,var(--p),var(--p2));
+  box-shadow:0 8px 20px rgba(79,70,229,.3);transition:transform .15s,box-shadow .15s,filter .15s;
+}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 26px rgba(79,70,229,.38)}
+.btn:active:not(:disabled){transform:translateY(0)}
+.btn:disabled{background:#cbd5e1;box-shadow:none;cursor:not-allowed;color:#64748b}
+.btn.green{background:linear-gradient(135deg,#059669,#10b981);box-shadow:0 8px 20px rgba(16,185,129,.3)}
+.btn.ghost{background:#fff;color:var(--p);border:2px solid var(--p);box-shadow:none}
+.btn.sm{display:inline-block;width:auto;margin:0;padding:10px 18px;font-size:.9rem}
+
+/* ---------- FORMS ---------- */
+.field{margin-bottom:14px}
+.field label{font-weight:600;font-size:.88rem}
+.field input,.field select,.input{
+  width:100%;padding:13px 14px;margin-top:6px;border:2px solid var(--line);border-radius:12px;font:500 1rem 'Poppins',sans-serif;
+  color:var(--ink);background:#fff;transition:border .2s,box-shadow .2s;
+}
+.field input:focus,.field select:focus,.input:focus{outline:none;border-color:var(--p);box-shadow:0 0 0 4px rgba(79,70,229,.12)}
+
+/* ---------- TATA TERTIB ---------- */
+.rules{background:linear-gradient(135deg,#fff1f2,#fff7ed);border:1px solid #fecdd3;border-radius:16px;padding:16px 18px;margin-bottom:18px}
+.rules h3{margin:0 0 8px;font-size:1rem;color:#be123c}
+.rules ol{margin:0;padding-left:20px;font-size:.88rem;color:#7f1d1d}
+.rules li{margin-bottom:4px}
+
+/* ---------- MATERI ---------- */
+.timer-box{
+  position:sticky;top:8px;z-index:20;text-align:center;font-weight:700;font-size:1.05rem;padding:12px;border-radius:14px;margin-bottom:16px;
+  background:linear-gradient(135deg,#fffbeb,#fef3c7);color:#b45309;border:2px solid #fcd34d;box-shadow:0 6px 18px rgba(245,158,11,.2)
+}
+.timer-box.ok{background:linear-gradient(135deg,#ecfdf5,#d1fae5);color:#047857;border-color:#6ee7b7}
+.timer-box.danger{background:linear-gradient(135deg,#fef2f2,#fee2e2);color:#b91c1c;border-color:#fca5a5}
+.progress-wrap{height:8px;background:#fde68a;border-radius:8px;margin-top:8px;overflow:hidden}
+.progress-wrap i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--warn),var(--ok));transition:width 1s linear}
+
+.materi{border-radius:18px;padding:20px 22px;margin:18px 0 10px;border:1px solid var(--line);background:linear-gradient(180deg,#fff,#f8faff);position:relative}
+.materi .tag{position:absolute;top:-12px;left:18px;background:linear-gradient(135deg,var(--p),var(--acc));color:#fff;font-weight:700;font-size:.75rem;padding:4px 14px;border-radius:999px}
+.materi h4{margin:6px 0 8px;font-size:1.12rem;color:var(--p)}
+.materi p,.materi li{font-size:.94rem}
+.callout{background:#eef2ff;border-left:4px solid var(--p);border-radius:10px;padding:10px 14px;margin:10px 0;font-size:.9rem}
+.kuis{background:#f8fafc;border:2px dashed #cbd5e1;border-radius:18px;padding:16px;margin-bottom:26px}
+.kuis h4{margin:0 0 4px}
+.kuis .score{font-size:.82rem;font-weight:600;color:var(--mute);margin-bottom:8px}
+
+/* ---------- SOAL & OPSI ---------- */
+.qcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px}
+.qtext{margin:0 0 8px;font-weight:500;font-size:.96rem}
+.opt{display:flex;gap:12px;align-items:flex-start;padding:11px 14px;margin:8px 0;border:2px solid var(--line);border-radius:12px;cursor:pointer;transition:.18s;font-size:.92rem;background:#fff;position:relative}
+.opt:hover{border-color:#a5b4fc;background:#f8faff}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt .dot{width:20px;height:20px;border-radius:50%;border:2px solid #b8c0d4;flex:none;margin-top:3px;transition:.18s}
+.opt:has(input:checked){border-color:var(--p);background:#eef2ff}
+.opt:has(input:checked) .dot{background:var(--p);border-color:var(--p);box-shadow:inset 0 0 0 4px #fff}
+.opt.locked{cursor:default}
+.opt.correct{border-color:var(--ok)!important;background:#ecfdf5!important}
+.opt.correct .dot{background:var(--ok)!important;border-color:var(--ok)!important}
+.opt.wrong{border-color:var(--bad)!important;background:#fef2f2!important}
+.opt.wrong .dot{background:var(--bad)!important;border-color:var(--bad)!important}
+.fb{font-size:.84rem;font-weight:600;margin-top:6px;display:none}
+.fb.ok{color:#047857;display:block}.fb.no{color:#b91c1c;display:block}
+
+/* ---------- SIMULASI ---------- */
+.locked-box{text-align:center;padding:30px 20px;background:linear-gradient(135deg,#fffbeb,#fef3c7);border-radius:18px;border:2px solid #fde68a}
+.locked-box .lock{font-size:2.6rem}
+.sim{border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:16px;background:linear-gradient(180deg,#fff,#f8faff);position:relative}
+.sim h4{margin:0 0 6px;color:var(--p)}
+.sim .done-mark{position:absolute;right:16px;top:14px;font-size:.78rem;font-weight:700;color:#047857;background:#d1fae5;padding:3px 10px;border-radius:999px;display:none}
+.sim.done .done-mark{display:inline-block}
+.bars{margin-top:12px}
+.bar{margin:8px 0;font-size:.85rem;font-weight:600}
+.bar .track{height:16px;background:#e2e8f0;border-radius:10px;overflow:hidden;margin-top:4px}
+.bar .fill{height:100%;width:0;border-radius:10px;transition:width 1s ease;background:linear-gradient(90deg,var(--ok),#34d399);color:#fff;font-size:.7rem;text-align:right;padding-right:6px;line-height:16px}
+.bar .fill.low{background:linear-gradient(90deg,var(--bad),#f87171)}
+.chat{background:#f1f5f9;border-radius:14px;padding:12px;min-height:90px;max-height:240px;overflow:auto;margin:10px 0}
+.bubble{max-width:82%;padding:8px 12px;border-radius:14px;margin:6px 0;font-size:.88rem;animation:rise .3s both}
+.bubble.me{background:var(--p);color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+.bubble.bot{background:#fff;border:1px solid var(--line);border-bottom-left-radius:4px}
+.bubble.alert{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.chips button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font:500 .8rem 'Poppins',sans-serif;cursor:pointer;color:var(--p)}
+.chips button:hover{background:#eef2ff}
+.scan-ring{width:170px;height:170px;border-radius:50%;margin:10px auto;position:relative;overflow:hidden;background:#0f172a;border:4px solid var(--acc);box-shadow:0 0 0 6px rgba(6,182,212,.15)}
+.scan-ring video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.scan-ring .beam{position:absolute;left:0;right:0;height:3px;background:#22d3ee;box-shadow:0 0 14px #22d3ee;top:0;display:none}
+.scan-ring.run .beam{display:block;animation:beam 1.4s linear infinite}
+@keyframes beam{0%{top:0}50%{top:100%}100%{top:0}}
+.scan-ring .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:.8rem;text-align:center;padding:10px}
+.checks{list-style:none;padding:0;margin:10px auto;max-width:300px;font-size:.88rem;text-align:left}
+.checks li{padding:3px 0;opacity:.4;transition:.4s}
+.checks li.on{opacity:1;color:#047857;font-weight:600}
+
+/* ---------- UJIAN ---------- */
+.exam-bar{position:sticky;top:8px;z-index:20;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 16px;border-radius:14px;background:#fff;border:2px solid #fcd34d;box-shadow:0 6px 18px rgba(0,0,0,.1);margin-bottom:14px;font-weight:700}
+.exam-bar .t{color:#b45309;font-size:1.05rem}
+.exam-bar .t.danger{color:var(--bad);animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.5}}
+.exam-bar .c{font-size:.85rem;color:var(--p)}
+.warn-title{text-align:center;color:var(--bad);font-size:.95rem;margin:0 0 12px}
+
+/* ---------- RAPOR ---------- */
+.rapor{text-align:center;padding:26px 18px;border-radius:20px;margin-bottom:20px;background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:2px solid #34d399}
+.rapor.fail{background:linear-gradient(135deg,#fef2f2,#fee2e2);border-color:#f87171}
+.rapor h2{margin:0;color:#065f46}
+.rapor.fail h2{color:#991b1b}
+.rapor .nilai{font-size:3.4rem;font-weight:800;margin:6px 0;line-height:1.1}
+.meta{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.meta span{background:#fff;border-radius:999px;padding:4px 12px;font-size:.78rem;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+.feedback-item{background:#fff;padding:10px 14px;border-left:5px solid;margin-bottom:10px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);font-size:.88rem}
+.feedback-item.benar{border-color:var(--ok)}
+.feedback-item.salah{border-color:var(--bad)}
+.topik-tag{display:inline-block;margin:6px 0 2px;padding:2px 10px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:.7rem;font-weight:700}
+.jwb-siswa{color:#b91c1c;margin-top:4px}
+.jwb-benar{color:#047857;margin-top:2px}
+.penjelasan{margin-top:8px;padding:8px 12px;background:#fffbeb;border-radius:8px;color:#78350f;font-size:.84rem;line-height:1.5}
+.motivasi{background:linear-gradient(135deg,#eef2ff,#faf5ff);border:2px solid #c7d2fe;border-radius:20px;padding:20px 18px;margin-bottom:20px}
+.motivasi.curang{background:linear-gradient(135deg,#fff7ed,#ffedd5);border-color:#fdba74}
+.motivasi h3{margin:0 0 8px;color:#3730a3}
+.motivasi.curang h3{color:#9a3412}
+.motivasi p{margin:6px 0;font-size:.9rem;line-height:1.6}
+.mot-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.mot-col{background:#fff;border-radius:14px;padding:12px 14px;font-size:.84rem;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.mot-col b{display:block;margin-bottom:6px}
+.mot-col ul{margin:0;padding-left:18px}
+.mot-quote{text-align:center;font-weight:700;color:#4338ca;margin-top:12px!important}
+@media (max-width:600px){.mot-grid{grid-template-columns:1fr}}
+
+/* ---------- KAMERA & MODAL ---------- */
+#floating-cam{position:fixed;bottom:16px;right:16px;width:118px;height:88px;background:#000;border:3px solid var(--p);border-radius:14px;z-index:900;display:none;transform:scaleX(-1);object-fit:cover;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+#cam-label{position:fixed;bottom:100px;right:20px;z-index:901;display:none;background:rgba(220,38,38,.92);color:#fff;font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:999px}
+#modal{position:fixed;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(4px);z-index:2000;display:none;align-items:center;justify-content:center;padding:18px}
+#modal.show{display:flex}
+#modal .box{background:#fff;border-radius:22px;max-width:420px;width:100%;padding:26px;text-align:center;animation:pop .25s ease both}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:none;opacity:1}}
+#modal .ic{font-size:2.8rem}
+#modal h3{margin:6px 0}
+#modal .body{font-size:.92rem;color:#475569}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:3000}
+
+/* ---------- ANTI SCREENSHOT ---------- */
+#wm{position:fixed;inset:0;z-index:1500;pointer-events:none;display:none;background-repeat:repeat}
+body.shield .container{filter:blur(22px);transition:filter .05s}
+body.shield .container *{pointer-events:none}
+@media print{#wm{display:none!important}}
+/* ---------- PRINT ---------- */
+@media print{
+  body{background:#fff;-webkit-user-select:auto;user-select:auto}
+  body *{visibility:hidden}
+  #hasil-akhir,#hasil-akhir *{visibility:visible}
+  #hasil-akhir{position:absolute;left:0;top:0;width:100%}
+  .no-print,.btn,#floating-cam,#cam-label,header{display:none!important}
+  .card{box-shadow:none;padding:0}
+}
+@media (max-width:600px){
+  .card{padding:18px;border-radius:18px}
+  header h1{font-size:1.25rem}
+  #floating-cam{width:92px;height:70px;bottom:10px;right:10px}
+  #cam-label{bottom:84px;right:14px}
+  .stepper div{font-size:.58rem}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="badge-ai">🤖 KECERDASAN ARTIFISIAL</span>
+  <h1>PJJ Koding dan KA Kelas IX</h1>
+  <p>MTsN 6 Pesisir Selatan • Belajar Cerdas, Jujur, dan Kritis</p>
+</header>
+
+<video id="floating-cam" autoplay playsinline muted></video>
+<div id="cam-label">● PENGAWASAN</div>
+<canvas id="confetti"></canvas>
+<div id="wm"></div>
+
+<div id="modal"><div class="box">
+  <div class="ic" id="m-ic"></div><h3 id="m-title"></h3><div class="body" id="m-body"></div>
+  <button class="btn" id="m-ok">OK</button>
+  <button class="btn ghost" id="m-cancel" style="display:none">Batal</button>
+</div></div>
+
+<div class="container">
+
+  <div class="card" id="hud">
+    <div class="row">
+      <div id="student-info"></div>
+      <div class="chip" id="xp-chip">⭐ 0 XP • Pemula</div>
+    </div>
+    <div class="stepper" id="stepper">
+      <div data-s="step-login"><i></i>Presensi</div>
+      <div data-s="step-apersepsi"><i></i>Diagnostik</div>
+      <div data-s="step-materi"><i></i>Materi</div>
+      <div data-s="step-simulasi"><i></i>Simulasi</div>
+      <div data-s="step-formatif"><i></i>Ujian</div>
+    </div>
+  </div>
+
+  <div class="card">
+
+    <!-- 1. LOGIN -->
+    <div id="step-login" class="step active">
+      <h2 class="title">Presensi & Verifikasi PJJ</h2>
+      <p class="sub">Baca tata tertib, aktifkan kamera, lalu isi data dirimu.</p>
+
+      <div class="rules">
+        <h3>⚠️ Tata Tertib PJJ Koding dan KA</h3>
+        <ol>
+          <li>Wajib membaca materi selama <b>30 menit</b>. Waktu hanya berjalan saat halaman ini terbuka.</li>
+          <li>Wajib menjawab seluruh kuis materi dan mencoba <b>seluruh simulasi</b> sebelum Ujian Akhir.</li>
+          <li><b>Pengawasan aktif:</b> dilarang membuka aplikasi/tab lain. Setiap pelanggaran dicatat. <b>3 kali meninggalkan halaman = nilai langsung 0</b> dan sesi dihentikan.</li>
+          <li>Dilarang menyalin (copy-paste) soal ke AI lain. Jika terdeteksi, nilai otomatis 0.</li>
+          <li><b>KKM 75.</b> Nilai di bawah 75 wajib <b>remedial</b> sampai tuntas untuk melihat rapor.</li>
+            <li><b>Kirim PDF rapor atau Screen Shoot Nilai Tes Akhir </b> lalu Kirim ke Group WA untuk memastikan ananda selesai mengerjakan</li>
+        </ol>
+      </div>
+
+      <button class="btn" id="btn-kamera" onclick="aktifkanKamera()">📷 1. Aktifkan Kamera Pengawas (Wajib)</button>
+
+      <div id="form-data-diri" style="display:none;margin-top:18px">
+        <div class="field"><label>Nama Lengkap</label><input type="text" id="nama-siswa" placeholder="Masukkan nama lengkapmu" autocomplete="off"></div>
+        <div class="field"><label>Kelas</label>
+          <select id="kelas-siswa">
+            <option value="">-- Pilih Kelas --</option>
+            <option value="IXa">IX a</option><option value="IXb">IX b</option>
+            <option value="IXc">IX c</option><option value="IXd">IX d</option>
+          </select>
+        </div>
+        <button class="btn green" onclick="mulaiApersepsi()">🚀 2. Saya Setuju Tata Tertib & Mulai Belajar</button>
+      </div>
+    </div>
+
+    <!-- 2. APERSEPSI -->
+    <div id="step-apersepsi" class="step">
+      <h2 class="title">Apersepsi: Seberapa Tahu Kamu?</h2>
+      <p class="sub">Jawab 10 pertanyaan sesuai pengetahuan awalmu. Tidak dinilai, tapi dapat <b>+10 XP</b>!</p>
+      <div id="diag-container"></div>
+      <button class="btn" onclick="lanjutMateri()">Kirim Jawaban & Mulai Belajar ➔</button>
+    </div>
+
+    <!-- 3. MATERI -->
+    <div id="step-materi" class="step">
+      <div id="timer-materi" class="timer-box">
+        <div id="timer-text">Wajib membaca: 30:00</div>
+        <div class="progress-wrap"><i id="timer-bar"></i></div>
+      </div>
+
+      <h2 class="title" style="text-align:center">📖 Modul Kecerdasan Artifisial</h2>
+      <p class="sub" style="text-align:center">Baca dengan saksama, lalu jawab kuis di tiap bagian. Setiap jawaban benar = <b>+10 XP</b>.</p>
+
+      <div class="materi"><span class="tag">BAGIAN A</span>
+        <h4>Kualitas Data (Garbage In, Garbage Out)</h4>
+        <p>Kecerdasan Artifisial (KA) atau <i>Artificial Intelligence</i> (AI) belajar dari pola data yang diberikan kepadanya, disebut <b>Data Latih</b> (<i>Training Data</i>).</p>
+        <div class="callout"><b>GIGO</b> = <i>Garbage In, Garbage Out</i> → "Sampah Masuk, Sampah Keluar". Kualitas output AI bergantung pada kualitas datanya.</div>
+        <ul>
+          <li><b>Data Bias:</b> jika AI dilatih dengan data diskriminatif, outputnya akan bias.</li>
+          <li><b>Data Berkualitas:</b> harus akurat, objektif, dan relevan agar AI cerdas dan adil.</li>
+        </ul>
+      </div>
+      <div class="kuis"><h4>📝 Kuis Bagian A</h4><div class="score" id="skor-qa">0 / 5 terjawab</div><div id="kuis-a-container"></div></div>
+
+      <div class="materi"><span class="tag">BAGIAN B</span>
+        <h4>Keamanan Data dalam Penggunaan KA</h4>
+        <p>Aplikasi AI publik (ChatGPT, Gemini) "belajar" dari teks yang diketik penggunanya (<i>prompt</i>).</p>
+        <ul>
+          <li><b>Privasi:</b> dilarang mengetik data pribadi (NIK, password, rahasia, foto pribadi) ke AI publik karena berpotensi tersimpan di server.</li>
+          <li><b>Halusinasi AI:</b> AI bisa memberi jawaban meyakinkan namun salah. Wajib verifikasi silang ke sumber yang valid.</li>
+        </ul>
+      </div>
+      <div class="kuis"><h4>📝 Kuis Bagian B</h4><div class="score" id="skor-qb">0 / 5 terjawab</div><div id="kuis-b-container"></div></div>
+
+      <div class="materi"><span class="tag">BAGIAN C</span>
+        <h4>Analisis Artefak Hasil KA (Deepfake)</h4>
+        <p><b>Deepfake</b> adalah manipulasi audio/video tingkat tinggi memakai AI sehingga tampak nyata. Sering disalahgunakan untuk penipuan atau hoaks.</p>
+        <p>Cara mendeteksi artefak AI / Deepfake:</p>
+        <ol>
+          <li><b>Kedipan mata:</b> kaku atau tidak alami.</li>
+          <li><b>Lip-sync:</b> gerak bibir tidak sinkron dengan suara.</li>
+          <li><b>Proporsi (AI Art):</b> jari salah bentuk, teks latar aneh/berantakan.</li>
+          <li><b>Voice cloning:</b> nada datar, robotik, kurang emosi.</li>
+        </ol>
+      </div>
+      <div class="kuis"><h4>📝 Kuis Bagian C</h4><div class="score" id="skor-qc">0 / 5 terjawab</div><div id="kuis-c-container"></div></div>
+
+      <button class="btn green" id="btn-lanjut-simulasi" disabled onclick="kumpulkanSemuaKuis()">Selesaikan Materi & Lanjut Simulasi ➔</button>
+      <p id="teks-tunggu-materi" style="text-align:center;color:#b45309;font-size:.85rem;font-weight:600">Tombol aktif setelah waktu baca selesai dan seluruh kuis terjawab.</p>
+    </div>
+
+    <!-- 4. SIMULASI -->
+    <div id="step-simulasi" class="step">
+      <div class="locked-box" id="lock-simulasi">
+        <div class="lock">🔒</div>
+        <h3 style="margin:6px 0">Simulasi Terkunci</h3>
+        <p class="sub">Masukkan kode akses Simulasi dari Pak Irwan.</p>
+        <input type="password" class="input" id="kode-simulasi" placeholder="Masukkan kode" style="text-align:center" onkeydown="if(event.key==='Enter')bukaSimulasi()">
+        <button class="btn" onclick="bukaSimulasi()">Buka Simulasi</button>
+        <p id="error-simulasi" style="color:var(--bad);display:none;margin:10px 0 0;font-weight:600">Kode salah, coba lagi!</p>
+      </div>
+
+      <div id="konten-simulasi" style="display:none">
+        <h2 class="title">🧪 Laboratorium Simulasi AI</h2>
+        <p class="sub">Selesaikan ketiga simulasi untuk membuka Ujian Akhir. Tiap simulasi <b>+20 XP</b>.</p>
+
+        <div class="sim" id="sim1">
+          <span class="done-mark">✔ SELESAI</span>
+          <h4>▶ Simulasi 1: Kualitas Data (GIGO)</h4>
+          <p style="font-size:.9rem">Latih AI penyeleksi beasiswa dengan <b>kedua</b> dataset, lalu bandingkan hasilnya.</p>
+          <select id="sim-dataset" class="input">
+            <option value="netral">Dataset A: Data beragam dan adil</option>
+            <option value="bias">Dataset B: Bias (hanya 1 golongan)</option>
+          </select>
+          <button class="btn" onclick="simulasiData()" style="margin-top:10px">Latih Mesin AI</button>
+          <div class="bars" id="bars-data" style="display:none">
+            <div class="bar">Akurasi pada pelamar laki-laki<div class="track"><div class="fill" id="b-l"></div></div></div>
+            <div class="bar">Akurasi pada pelamar perempuan<div class="track"><div class="fill" id="b-p"></div></div></div>
+          </div>
+          <p id="hasil-sim-data" style="font-weight:600;margin:10px 0 0;font-size:.9rem"></p>
+        </div>
+
+        <div class="sim" id="sim2">
+          <span class="done-mark">✔ SELESAI</span>
+          <h4>▶ Simulasi 2: Keamanan Data Chatbot</h4>
+          <p style="font-size:.9rem">Kirim pesan ke chatbot. Lihat apa yang terjadi jika kamu mengetik data sensitif.</p>
+          <div class="chat" id="chat-box"><div class="bubble bot">🤖 Halo! Aku chatbot simulasi. Mau tanya apa?</div></div>
+          <div class="chips">
+            <button onclick="isiChat('Halo, apa itu AI?')">Sapaan biasa</button>
+            <button onclick="isiChat('NIK saya 1234567890')">Kirim NIK</button>
+            <button onclick="isiChat('Password akun saya rahasia123')">Kirim password</button>
+          </div>
+          <input type="text" id="sim-chat" class="input" placeholder="Ketik pesan..." autocomplete="off" onkeydown="if(event.key==='Enter')simulasiChat()">
+          <button class="btn" onclick="simulasiChat()" style="margin-top:10px">Kirim Pesan</button>
+        </div>
+
+        <div class="sim" id="sim3" style="text-align:center">
+          <span class="done-mark">✔ SELESAI</span>
+          <h4>▶ Simulasi 3: Analisis Artefak (Sensor Kamera)</h4>
+          <p style="font-size:.9rem">Sensor kamera memindai wajahmu untuk mendeteksi tanda Deepfake.</p>
+          <div class="scan-ring" id="scan-ring"><video id="sim-video" autoplay playsinline muted></video><div class="beam"></div><div class="ph" id="scan-ph">Kamera siap</div></div>
+          <ul class="checks" id="scan-checks">
+            <li>👁️ Pola kedipan mata alami</li>
+            <li>👄 Sinkronisasi bibir dan suara</li>
+            <li>🧴 Tekstur kulit dan bayangan</li>
+            <li>💡 Konsistensi pencahayaan</li>
+          </ul>
+          <p id="hasil-scan" style="font-weight:700;color:#047857;display:none;margin:6px 0">✔️ Manusia asli terdeteksi.</p>
+          <button class="btn" onclick="mulaiScan()" id="btn-scan">Mulai Analisis Sensor</button>
+        </div>
+
+        <button class="btn" id="btn-lanjut-formatif" disabled onclick="lanjutFormatifLock()">🔒 Ujian Akhir Terkunci (selesaikan 3 simulasi)</button>
+      </div>
+    </div>
+
+    <!-- 5. UJIAN -->
+    <div id="step-formatif" class="step">
+      <div class="locked-box" id="lock-formatif">
+        <div class="lock">🔐</div>
+        <h3 style="margin:6px 0">Ujian Akhir Terkunci</h3>
+        <p class="sub">Masukkan kode akses ujian. Siapkan dirimu, waktu 30 menit!</p>
+        <input type="password" class="input" id="kode-formatif" placeholder="Masukkan kode" style="text-align:center" onkeydown="if(event.key==='Enter')bukaFormatif()">
+        <button class="btn" onclick="bukaFormatif()">Buka Ujian Akhir</button>
+        <p id="error-formatif" style="color:var(--bad);display:none;margin:10px 0 0;font-weight:600">Kode salah, coba lagi!</p>
+      </div>
+
+      <div id="konten-formatif" style="display:none">
+        <div class="exam-bar"><span class="t" id="timer-ujian">⏱ 30:00</span><span class="c" id="jml-terjawab">0 / 25 terjawab</span><span class="c" id="info-pelanggaran">⚠ 0/3</span></div>
+        <p class="warn-title"><b>DILARANG keluar browser / pindah tab / copy-paste!</b></p>
+        <div id="formatif-container"></div>
+        <button class="btn green" onclick="konfirmasiKumpul()">Kumpulkan & Cek KKM ✅</button>
+      </div>
+
+      <div id="hasil-akhir" style="display:none">
+        <div class="rapor" id="rapor-box">
+          <h2 id="rapor-judul">🎓 Rapor PJJ Koding dan KA</h2>
+          <h3 id="cetak-nama" style="margin:8px 0"></h3>
+          <div class="nilai" id="teks-nilai"></div>
+          <div id="rapor-status" style="font-weight:700"></div>
+          <div class="meta" id="rapor-meta"></div>
+        </div>
+        <div id="motivasi-box"></div>
+        <h3>Koreksi, Feedback & Penjelasan Jawaban</h3>
+        <div id="feedback-container"></div>
+        <button class="btn no-print" onclick="window.print()">🖨️ Simpan PDF / Cetak Rapor</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* =====================================================
+   PENGATURAN GURU (ubah di sini)
+   Catatan: kode & jawaban ada di sisi browser, jadi tidak
+   sepenuhnya aman dari siswa yang paham "View Source".
+   ===================================================== */
+const CONFIG = {
+  KODE_SIMULASI: "123",
+  KODE_UJIAN: "321",
+  WAKTU_MATERI: 1800,   // detik
+  WAKTU_UJIAN: 1800,    // detik
+  KKM: 75,
+  ANTI_SCREENSHOT: true, // watermark nama siswa + blur saat jendela kehilangan fokus + deteksi tombol PrintScreen
+  NILAI_NOL_SELURUH_SESI: true, // true = 3x keluar halaman di tahap mana pun (materi/simulasi/ujian) langsung nilai 0; false = hanya saat ujian
+  MAX_PELANGGARAN: 3,   // batas pindah tab saat ujian
+  SCRIPT_URL: ""        // opsional: URL Google Apps Script untuk merekap nilai ke Google Sheets
+};
+
+const $ = id => document.getElementById(id);
+const S = { nama:"", kelas:"", xp:0, pelanggaran:0, percobaan:0, aktif:false, step:"step-login", kamera:false, curang:false, alasanCurang:"" };
+
+/* ---------------- DATA SOAL ---------------- */
+const diagData = [
+  {q:"Apakah kamu pernah mendengar istilah \"Deepfake\" atau video editan AI yang sangat mirip aslinya?", o:["Pernah","Belum"]},
+  {q:"Menurutmu, apakah aman memberikan NIK atau password ke Chatbot AI (seperti ChatGPT)?", o:["Aman","Tidak aman"]},
+  {q:"Apa wujud Kecerdasan Artifisial (AI) yang paling umum saat ini?", o:["Robot fisik dari besi","Program komputer / aplikasi"]},
+  {q:"Apakah menurutmu AI bisa berbohong atau mengarang jawaban (halusinasi)?", o:["Bisa","Tidak, selalu 100% benar"]},
+  {q:"Pernahkah kamu mendengar istilah \"Garbage In, Garbage Out\" (GIGO)?", o:["Pernah","Belum"]},
+  {q:"Jika sebuah AI dilatih hanya dengan data laki-laki, apa yang terjadi saat AI menyeleksi perempuan?", o:["Tetap adil","Menjadi bias / diskriminatif"]},
+  {q:"Apakah AI dapat meniru atau mengkloning suara seseorang (Voice Cloning)?", o:["Bisa","Tidak bisa"]},
+  {q:"Kamera pada laptop/HP bagi sebuah sistem AI bertindak sebagai apa?", o:["Sensor mata / penglihatan","Alat penyimpan data"]},
+  {q:"Bolehkah kita menggunakan AI mengerjakan 100% tugas lalu mengklaimnya karya sendiri?", o:["Boleh","Tidak boleh (melanggar etika)"]},
+  {q:"Tujuan utama diciptakannya AI oleh ilmuwan adalah untuk?", o:["Membantu pekerjaan manusia","Menggantikan manusia sepenuhnya"]}
+];
+
+const kuisA = [
+  {q:"Apa kepanjangan dari prinsip GIGO?", o:["Garbage Input, Great Output","Garbage In, Garbage Out","Go In, Go Out"], a:1},
+  {q:"Jika AI dilatih menggunakan data yang rasis, AI akan?", o:["Menghasilkan keputusan yang bias/diskriminatif","Memperbaiki dirinya sendiri","Otomatis mati"], a:0},
+  {q:"Apa itu Training Data?", o:["Data untuk meretas","Kumpulan data yang dipelajari AI","Kuota internet AI"], a:1},
+  {q:"Kriteria data yang baik untuk AI adalah?", o:["Akurat, objektif, relevan","Penuh kebohongan","Hanya foto saja"], a:0},
+  {q:"Jika AI belajar sejarah dari data hoaks, ia akan?", o:["Menolak menjawab","Memberikan jawaban hoaks seolah fakta","Menghapus data"], a:1}
+];
+const kuisB = [
+  {q:"Mengapa dilarang memasukkan NIK ke Chatbot AI?", o:["Memicu kebocoran privasi di server","Membuat AI lambat","Boros kuota"], a:0},
+  {q:"Halusinasi AI adalah fenomena di mana AI?", o:["Melihat hantu","Memberikan jawaban meyakinkan namun mengarang/salah","Terkena virus"], a:1},
+  {q:"Tindakan wajib setelah mendapat jawaban dari AI?", o:["Langsung copy paste","Verifikasi ulang ke sumber kredibel","Menghapus AI"], a:1},
+  {q:"Data yang TIDAK boleh dibagikan ke AI?", o:["Resep masakan","Password dan alamat lengkap","Teks bahasa Inggris"], a:1},
+  {q:"Siapa yang bertanggung jawab menjaga privasi saat memakai AI?", o:["Pemerintah","Komputer","Diri kita sendiri sebagai pengguna"], a:2}
+];
+const kuisC = [
+  {q:"Apa itu Deepfake?", o:["Video bawah laut","Manipulasi audio/video dengan AI sehingga tampak nyata","Aplikasi pengolah kata"], a:1},
+  {q:"Ciri Deepfake video kualitas rendah?", o:["Resolusi 4K","Kedipan mata kaku/tidak wajar","Durasi panjang"], a:1},
+  {q:"Kecacatan visual yang sering muncul di gambar AI?", o:["Jumlah jari tidak pas lima / terdistorsi","Warna terlalu cerah","Ukuran file besar"], a:0},
+  {q:"Ciri Voice Cloning (kloning suara) palsu?", o:["Terlalu keras","Intonasi datar, robotik, kurang emosi","Tidak bisa di-pause"], a:1},
+  {q:"Tujuan oknum menyebar video Deepfake politik?", o:["Kampanye sehat","Menyebarkan hoaks dan fitnah","Menghemat internet"], a:1}
+];
+
+const formatifData = [
+  {q:"Sebuah perusahaan teknologi merilis AI penilai lamaran kerja. Setelah 1 bulan, terungkap bahwa AI tersebut otomatis menolak pelamar perempuan. Berdasarkan prinsip AI, penyebab utama masalah ini adalah...", o:["Komputer terserang virus sebelum proses seleksi","AI dilatih menggunakan data (dataset) masa lalu yang didominasi oleh pelamar laki-laki","AI memiliki perasaan benci terhadap manusia","Internet perusahaan tidak stabil saat AI bekerja"], a:1, t:"Bias Data & GIGO", e:"AI belajar dari data masa lalu. Karena data pelamar didominasi laki-laki, AI menganggap pola itu 'normal' lalu menolak perempuan. Ini disebut bias data, bukan karena virus, jaringan, atau perasaan benci."},
+  {q:"Budi menerima video dari aplikasi pesan yang menampilkan kepala sekolahnya sedang berbicara dengan kata-kata kasar. Budi curiga itu adalah hasil Deepfake. Langkah analisis kritis pertama yang paling logis dilakukan Budi adalah...", o:["Langsung membagikan video itu ke teman kelas untuk diskusi","Memperhatikan sinkronisasi gerak bibir dan kedipan mata tokoh di video tersebut","Mempercayai video tersebut 100% karena resolusinya HD","Melaporkan kepala sekolah ke polisi"], a:1, t:"Deepfake, Voice Cloning & Artefak KA", e:"Deepfake sering gagal menyamakan gerak bibir dan kedipan mata secara alami. Memeriksa kejanggalan visual adalah langkah verifikasi pertama sebelum menyebarkan video. Resolusi HD tidak membuktikan video itu asli."},
+  {q:"Sinta meminta ChatGPT untuk menuliskan rekam jejak kakeknya yang bukan tokoh terkenal. AI tersebut memberikan jawaban yang sangat panjang, dramatis, namun kejadiannya tidak pernah kakek Sinta alami. Fenomena ini dalam Kecerdasan Artifisial disebut...", o:["Voice Cloning","AI Hallucination (Halusinasi AI)","Cyber Security Breach","Garbage In, Garbage Out"], a:1, t:"Halusinasi & Keterbatasan AI", e:"AI generatif menyusun kata berdasarkan probabilitas, sehingga bisa menulis cerita yang meyakinkan padahal tidak benar. Fenomena ini disebut halusinasi AI. Selalu cek ulang fakta penting dari sumber terpercaya."},
+  {q:"Seorang siswa memasukkan nama lengkap, alamat rumah, nomor KTP orang tua, dan lokasi sekolah ke dalam Chatbot publik untuk dibuatkan surat izin sakit otomatis. Risiko keamanan terbesar dari tindakan siswa tersebut adalah...", o:["Chatbot akan rusak karena teks terlalu panjang","Data pribadi berpotensi tersimpan di peladen (server) AI dan bisa bocor / disalahgunakan","Siswa akan otomatis dikeluarkan dari sekolah","Kuota internet siswa akan terkuras habis"], a:1, t:"Keamanan Data Pribadi", e:"Data yang dimasukkan ke chatbot publik bisa tersimpan di server dan berisiko bocor atau disalahgunakan. Jangan pernah memasukkan NIK, alamat, atau nomor KTP ke chatbot."},
+  {q:"Dalam sistem penginderaan AI pada mobil otonom (bisa menyetir sendiri), kamera pada mobil merekam rambu lalu lintas. Bagaimana komputer pada mobil tersebut 'memaknai' gambar rambu merah itu?", o:["Sistem merasakannya sebagai cahaya panas","Sistem mengubah piksel gambar menjadi matriks angka matematis lalu mencocokkannya dengan pola data latih","Sistem melihat rambu lalu langsung menelepon polisi","Sistem akan menutup mata karena warnanya merah"], a:1, t:"Cara Kerja AI & Sensor", e:"Komputer tidak 'melihat' seperti manusia. Gambar dipecah menjadi piksel berupa angka (matriks), lalu dicocokkan dengan pola yang sudah dipelajari dari data latih."},
+  {q:"Prinsip 'Garbage In, Garbage Out' (GIGO) dalam AI memberikan pesan penting bagi programmer bahwa...", o:["Programmer harus rajin mengosongkan folder tempat sampah di komputer","Kecerdasan AI 100% bergantung pada akurasi dan objektivitas data yang diajarkan","AI tidak membutuhkan campur tangan manusia setelah diciptakan","Sebuah AI tidak bisa rusak meskipun datanya penuh virus"], a:1, t:"Bias Data & GIGO", e:"GIGO artinya kualitas keluaran AI mengikuti kualitas data masukan. Data yang buruk atau bias akan menghasilkan keputusan yang buruk atau bias."},
+  {q:"Pak Irwan menggunakan AI untuk menghasilkan gambar rapat dewan guru. Namun saat diperbesar, ada guru yang memiliki 7 jari tangan. Kesimpulan apa yang bisa diambil dari temuan artefak ini?", o:["AI tersebut meramalkan mutasi genetik di masa depan","Generative AI sering gagal memahami proporsi tubuh fisik manusia secara logis","Itu adalah foto asli, namun kameranya buram","Sistem komputer Pak Irwan terkena malware"], a:1, t:"Deepfake, Voice Cloning & Artefak KA", e:"Gambar buatan AI sering memiliki artefak, misalnya jari berlebih, karena AI meniru pola visual tanpa benar-benar memahami anatomi tubuh. Kejanggalan ini adalah petunjuk bahwa gambar bukan foto asli."},
+  {q:"Seseorang menelepon ibu Rina menggunakan nomor tidak dikenal. Suara di telepon itu sangat mirip 100% dengan suara anak Rina yang sedang menangis minta ditransfer uang. Jika Rina melek literasi AI, ia akan menyadari bahwa ini kemungkinan adalah serangan...", o:["Phishing email biasa","Voice Cloning menggunakan Kecerdasan Artifisial","Penipuan kartu kredit manual","Deepfake Video"], a:1, t:"Deepfake, Voice Cloning & Artefak KA", e:"Suara yang sangat mirip anggota keluarga dan mendesak transfer uang adalah modus Voice Cloning. Tetap tenang, tutup telepon, lalu hubungi langsung nomor asli keluargamu untuk memastikan."},
+  {q:"Mengapa kita TIDAK BOLEH mempercayakan pengambilan keputusan mutlak terkait hidup manusia (seperti vonis hukum di pengadilan) hanya kepada Kecerdasan Artifisial?", o:["Karena AI tidak punya empati dan mungkin menghasilkan putusan bias akibat data latihnya","Karena biaya listrik untuk menjalankan AI terlalu mahal bagi negara","Karena AI akan menghabiskan kertas putusan pengadilan","Karena AI lambat dalam mengetik surat keputusan"], a:0, t:"Etika & Dampak AI", e:"AI tidak punya empati dan nurani, serta bisa bias karena data latihnya. Keputusan yang menyangkut nasib manusia harus tetap dipegang dan dipertanggungjawabkan oleh manusia."},
+  {q:"Jika Anda ingin melatih sebuah AI untuk mendeteksi penyakit kulit secara adil pada semua ras manusia, jenis data latih (dataset) yang HARUS Anda kumpulkan adalah...", o:["Hanya foto penyakit dari rumah sakit di Eropa (orang kulit putih)","Foto-foto beresolusi rendah agar cepat diproses","Kumpulan foto penyakit kulit dari beragam ras, warna kulit, usia, dan jenis kelamin","Hanya teks teori medis dari buku kedokteran"], a:2, t:"Bias Data & GIGO", e:"Agar adil untuk semua orang, dataset harus beragam: berbagai ras, warna kulit, usia, dan jenis kelamin. Data yang timpang membuat AI hanya akurat untuk kelompok tertentu."},
+  {q:"Sistem pengenal wajah (Face Recognition) di pintu masuk MTsN 6 bertindak sebagai alat yang menggabungkan perangkat penginderaan (sensor) dengan AI. Perangkat penginderaan utamanya adalah...", o:["Mikrofon","Kamera (Sensor Optik)","Loudspeaker","Keyboard Mechanical"], a:1, t:"Cara Kerja AI & Sensor", e:"Kamera adalah sensor optik yang menangkap citra wajah. Citra itu kemudian dianalisis oleh AI untuk dikenali."},
+  {q:"Saat mengetik kalimat bahasa Indonesia menggunakan Google Assistant lewat suara, AI bertindak mengolah informasi suara menjadi teks (Speech to Text). Sensor utama yang menyuplai data ini bagi AI adalah...", o:["Mikrofon (Sensor Akustik)","Monitor Komputer","Lensa Kamera","Mouse Wireless"], a:0, t:"Cara Kerja AI & Sensor", e:"Suara ditangkap oleh mikrofon (sensor akustik), lalu AI mengubahnya menjadi teks (Speech to Text)."},
+  {q:"Etika penggunaan Kecerdasan Artifisial bagi seorang siswa dalam mengerjakan tugas esai dari guru adalah...", o:["Meminta AI menulis 100% esai dan mengklaimnya sebagai tulisan tangan sendiri","Menggunakan AI hanya sebagai alat bantu brainstorming ide, lalu menulis ulang dengan bahasa dan pemahaman sendiri","Menyuruh AI meretas komputer guru untuk memberikan nilai 100","Tidak menggunakan AI sama sekali agar tidak dimarahi komputer"], a:1, t:"Etika & Dampak AI", e:"AI boleh dipakai sebagai alat bantu mencari ide, tetapi tulisan akhir harus dari pemahamanmu sendiri. Mengaku karya AI sebagai karya sendiri melanggar kejujuran akademik."},
+  {q:"Andi mengunduh gambar pendaratan manusia di Mars hasil buatan Midjourney (AI Art). Ia mempublikasikannya di blognya dengan judul 'Foto Asli Mars dari NASA'. Tindakan Andi tersebut menunjukkan sikap...", o:["Kritis dan inovatif","Melanggar etika karena menyebarkan disinformasi (hoaks) menggunakan artefak AI","Hebat karena bisa menggunakan teknologi canggih","Sangat peduli pada pengetahuan luar angkasa"], a:1, t:"Etika & Dampak AI", e:"Menyebarkan gambar buatan AI sebagai 'foto asli NASA' adalah disinformasi (hoaks). Etika yang benar: beri keterangan jelas bahwa gambar tersebut buatan AI."},
+  {q:"Manakah dari aktivitas berikut yang merupakan dampak positif (manfaat) Kecerdasan Artifisial dalam kehidupan masyarakat?", o:["Mengurangi minat baca buku pelajaran fisik","Menganalisis hasil rontgen paru-paru pasien untuk mendeteksi gejala awal secara cepat","Membuat kloning wajah artis untuk iklan tanpa izin","Menghasilkan esai sekolah secara massal agar siswa tidak perlu berpikir"], a:1, t:"Etika & Dampak AI", e:"Membantu dokter mendeteksi gejala awal penyakit dari rontgen lebih cepat adalah manfaat nyata AI. Pilihan lainnya justru merugikan atau melanggar etika."},
+  {q:"Fitur 'Auto-Correct' pada keyboard smartphone sering kali salah menebak kata yang ingin kita ketik, khususnya kata gaul/daerah. Hal ini membuktikan bahwa...", o:["Kecerdasan buatan masih sangat mungkin menghasilkan output yang salah / kurang konteks","Smartphone tersebut rusak dan harus dibuang","AI memiliki sifat jahat untuk mengganggu manusia","AI lebih pintar dari bahasa manusia"], a:0, t:"Halusinasi & Keterbatasan AI", e:"AI belajar dari pola data. Kata gaul atau bahasa daerah yang jarang muncul di data latihnya mudah salah ditebak. Ini membuktikan AI belum sempurna dan sering kurang memahami konteks."},
+  {q:"Algoritma rekomendasi YouTube/TikTok adalah bentuk AI yang belajar dari kebiasaan menonton Anda. Jika Anda hanya sering menonton konten hoaks, maka AI tersebut akan...", o:["Otomatis menyaring konten hoaks karena ia peduli pada Anda","Menyarankan lebih banyak video hoaks serupa karena prinsip datanya bias","Menghapus akun Anda secara otomatis","Meminta izin orang tua Anda terlebih dahulu"], a:1, t:"Bias Data & GIGO", e:"Algoritma rekomendasi menyesuaikan diri dengan riwayat tontonanmu. Jika kamu sering menonton hoaks, AI akan menyodorkan lebih banyak yang serupa, karena AI tidak menilai benar atau salah, hanya mengikuti pola data."},
+  {q:"Perhatikan pernyataan ini: 'AI Generatif (seperti ChatGPT/Gemini) bukan sekadar mencari data di Google, melainkan menebak kata demi kata berdasarkan probabilitas matematis.'\nDari pernyataan tersebut, dapat disimpulkan bahwa AI Generatif...", o:["Tidak pernah salah dalam memberikan fakta","Bisa menyusun kalimat baru yang luwes, namun bisa saja merangkai kebohongan yang logis","Hanya bisa copy-paste dari Wikipedia","Mampu memahami emosi terdalam manusia"], a:1, t:"Halusinasi & Keterbatasan AI", e:"Karena menebak kata berdasarkan probabilitas, AI generatif bisa menulis kalimat yang luwes dan terdengar logis, tetapi tetap bisa keliru. Ia bukan sekadar copy-paste dan tidak benar-benar memahami emosi."},
+  {q:"Jika Anda sedang menganalisis keaslian sebuah video pidato tokoh (mencari ciri deepfake), Anda harus memperhatikan anomali (kejanggalan) pada...", o:["Jumlah jempol / like pada video tersebut","Bentuk bayangan wajah (lighting) dan gigi yang tampak blur atau aneh saat berbicara","Resolusi video yang disetel menjadi 1080p","Warna baju yang dipakai audiens di latar belakang"], a:1, t:"Deepfake, Voice Cloning & Artefak KA", e:"Pada video deepfake, pencahayaan wajah dan detail seperti gigi sering tampak janggal atau blur. Jumlah like, resolusi, dan baju penonton tidak berkaitan dengan keaslian video."},
+  {q:"Di sebuah sekolah, sistem AI digunakan untuk mengelompokkan minat bakat siswa. Jika ternyata hasil pengelompokan selalu keliru, tindakan perbaikan paling logis secara teknis adalah...", o:["Mengevaluasi dan memperbaiki KUALITAS DATA nilai dan survei siswa yang dimasukkan sebelumnya ke dalam AI","Menghancurkan komputer tersebut","Mengganti merk komputer","Menambahkan lebih banyak virus ke dalam sistem"], a:0, t:"Bias Data & GIGO", e:"Hasil yang selalu keliru biasanya berasal dari data yang bermasalah (prinsip GIGO). Solusi paling logis adalah memperbaiki kualitas datanya, bukan merusak atau mengganti komputer."},
+  {q:"Generative AI dapat merugikan seniman visual/pelukis jika...", o:["AI dipakai untuk mewarnai sketsa manual","AI dilatih (di-training) menggunakan miliaran karya seniman dari internet tanpa izin dan hak cipta (copyright)","AI mengajarkan teknik melukis baru","AI menghabiskan banyak listrik saat dinyalakan"], a:1, t:"Etika & Dampak AI", e:"Masalah muncul ketika AI dilatih dengan karya seniman tanpa izin, sehingga hak cipta dan hak ekonomi seniman terabaikan."},
+  {q:"Perbedaan utama cara Manusia dan Kecerdasan Artifisial (KA) dalam mengolah informasi adalah...", o:["Manusia menggunakan intuisi, moral, dan akal sehat, sedangkan KA murni mengkalkulasi pola data numerik tanpa emosi","Manusia lebih cepat dalam menghitung jutaan angka daripada KA","KA memiliki hati nurani, manusia tidak","KA tidak membutuhkan listrik untuk mengolah informasi"], a:0, t:"Peran Manusia & AI", e:"Manusia punya intuisi, moral, dan akal sehat. KA hanya menghitung pola data angka tanpa emosi. Dalam hal kecepatan menghitung, KA lebih unggul, bukan manusia."},
+  {q:"Mengapa penting bagi siswa kelas IX mempelajari cara mendeteksi 'Analisis Artefak Hasil KA'?", o:["Agar siswa bisa membuat virus komputer mutakhir","Sebagai bekal literasi digital agar kritis dan tidak mudah tertipu hoaks/manipulasi media di internet","Agar bisa mematikan komputer jarak jauh","Agar siswa menjadi robot"], a:1, t:"Literasi Digital & Zero Trust", e:"Mengenali artefak buatan KA melatih literasi digital: kamu jadi kritis dan tidak mudah tertipu hoaks atau manipulasi media di internet."},
+  {q:"Keamanan siber (Cybersecurity) di era AI mengharuskan kita memiliki prinsip 'Zero Trust', yang dalam konteks keseharian berarti...", o:["Tidak mempercayai satupun manusia di bumi","Menghindari segala bentuk investasi uang digital","Selalu bersikap skeptis dan verifikasi setiap informasi/file yang tampak meyakinkan di internet","Tidak menggunakan internet sama sekali"], a:2, t:"Literasi Digital & Zero Trust", e:"Zero Trust bukan berarti tidak percaya siapa pun, melainkan selalu skeptis dan memverifikasi informasi atau file yang tampak meyakinkan sebelum mempercayai atau menyebarkannya."},
+  {q:"Sikap akhir yang paling tepat mengenai hubungan Manusia dan AI adalah...", o:["Manusia harus tunduk pada keputusan efisien AI","AI adalah ancaman eksistensial yang harus dimusnahkan segera","AI adalah Alat Bantu (Tools); manusia tetap menjadi pemegang kendali dan tanggung jawab penuh","AI dan manusia harus bersaing memperebutkan wilayah geografis bumi"], a:2, t:"Peran Manusia & AI", e:"AI adalah alat bantu. Manusia tetap pemegang kendali dan bertanggung jawab penuh. Kita tidak tunduk pada AI, tetapi juga tidak perlu memusuhinya."}
+];
+
+/* ---------------- UTILITAS ---------------- */
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+function fmt(sec){ sec=Math.max(0,Math.ceil(sec)); return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0'); }
+function esc(t){ return String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function textHTML(t){ return esc(t).replace(/\n/g,'<br>'); }
+
+function showModal({icon="ℹ️",title="",body="",ok="OK",onOk=null,cancel=null,onCancel=null}){
+  $('m-ic').textContent=icon; $('m-title').textContent=title; $('m-body').innerHTML=body;
+  const okB=$('m-ok'), caB=$('m-cancel');
+  okB.textContent=ok; okB.onclick=()=>{ $('modal').classList.remove('show'); onOk&&onOk(); };
+  if(cancel){ caB.style.display='block'; caB.textContent=cancel; caB.onclick=()=>{ $('modal').classList.remove('show'); onCancel&&onCancel(); }; }
+  else caB.style.display='none';
+  $('modal').classList.add('show');
+}
+
+function levelName(){ return S.xp>=260?'Master AI':S.xp>=160?'Analis AI':S.xp>=60?'Penjelajah':'Pemula'; }
+function tambahXP(n){ S.xp+=n; $('xp-chip').textContent=`⭐ ${S.xp} XP • ${levelName()}`; }
+
+const stepOrder=['step-login','step-apersepsi','step-materi','step-simulasi','step-formatif'];
+function showStep(id){
+  S.step=id;
+  document.querySelectorAll('.step').forEach(el=>el.classList.remove('active'));
+  $(id).classList.add('active');
+  const idx=stepOrder.indexOf(id);
+  document.querySelectorAll('#stepper div').forEach((d,i)=>{ d.className = i<idx?'done':(i===idx?'now':''); });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function confetti(){
+  const c=$('confetti'), x=c.getContext('2d'); c.width=innerWidth; c.height=innerHeight;
+  const cols=['#4f46e5','#06b6d4','#10b981','#f59e0b','#ef4444','#7c3aed'];
+  const ps=Array.from({length:140},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,r:4+Math.random()*6,vy:2+Math.random()*4,vx:-2+Math.random()*4,col:cols[Math.floor(Math.random()*cols.length)],rot:Math.random()*6}));
+  let t=0;(function f(){ x.clearRect(0,0,c.width,c.height); ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.rot+=.1;x.save();x.translate(p.x,p.y);x.rotate(p.rot);x.fillStyle=p.col;x.fillRect(-p.r,-p.r/2,p.r*2,p.r);x.restore();}); if(++t<200) requestAnimationFrame(f); else x.clearRect(0,0,c.width,c.height); })();
+}
+
+/* ---------------- RENDER SOAL ---------------- */
+function optHTML(name,val,text,q){
+  return `<label class="opt"><input type="radio" name="${name}" value="${val}" data-q="${q}"><span class="dot"></span><span>${esc(text)}</span></label>`;
+}
+
+function renderDiag(){
+  $('diag-container').innerHTML = diagData.map((it,i)=>
+    `<div class="qcard"><p class="qtext"><b>${i+1}.</b> ${esc(it.q)}</p>${it.o.map((t,j)=>optHTML('diag'+i,j,t,i)).join('')}</div>`).join('');
+}
+
+const quizState = { qa:new Set(), qb:new Set(), qc:new Set() };
+const quizSource = { qa:kuisA, qb:kuisB, qc:kuisC };
+
+function renderKuis(data,cid,prefix){
+  const el=$(cid);
+  el.innerHTML = data.map((it,i)=>
+    `<div class="qcard"><p class="qtext"><b>${i+1}.</b> ${esc(it.q)}</p>${it.o.map((t,j)=>optHTML(prefix+'_'+i,j,t,i)).join('')}<div class="fb" id="${prefix}_f${i}"></div></div>`).join('');
+  el.querySelectorAll('input').forEach(inp=>inp.addEventListener('change',()=>jawabKuis(prefix,+inp.dataset.q,+inp.value,el)));
+}
+
+function jawabKuis(prefix,i,j,el){
+  const item=quizSource[prefix][i];
+  const inputs=el.querySelectorAll(`input[name="${prefix}_${i}"]`);
+  inputs.forEach(x=>{ x.disabled=true; x.closest('.opt').classList.add('locked'); });
+  inputs[item.a].closest('.opt').classList.add('correct');
+  const fb=$(`${prefix}_f${i}`);
+  if(j===item.a){ fb.className='fb ok'; fb.textContent='✔ Benar! +10 XP'; tambahXP(10); }
+  else { inputs[j].closest('.opt').classList.add('wrong'); fb.className='fb no'; fb.textContent='✘ Belum tepat. Jawaban benar ditandai hijau.'; }
+  quizState[prefix].add(i);
+  $('skor-'+prefix).textContent = `${quizState[prefix].size} / 5 terjawab`;
+}
+
+/* ---------------- ALUR ---------------- */
+async function aktifkanKamera(){
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({video:true});
+    $('floating-cam').srcObject=stream;
+    $('floating-cam').style.display='block'; $('cam-label').style.display='block';
+    const b=$('btn-kamera'); b.textContent='✔️ Kamera Pengawas Terverifikasi'; b.classList.add('green'); b.disabled=true;
+    $('form-data-diri').style.display='block';
+    S.kamera=true;
+  }catch(err){
+    showModal({icon:'📷',title:'Kamera Diperlukan',body:'PJJ wajib mengizinkan akses kamera agar ujian dapat diawasi. Periksa izin kamera di browser, lalu coba lagi.'});
+  }
+}
+
+function mulaiApersepsi(){
+  S.nama=$('nama-siswa').value.trim(); S.kelas=$('kelas-siswa').value;
+  if(S.nama.length<3||!S.kelas){ showModal({icon:'✍️',title:'Data belum lengkap',body:'Isi nama lengkap dan pilih kelas terlebih dahulu.'}); return; }
+  $('student-info').textContent=`👤 ${S.nama} • Kelas ${S.kelas}`;
+  $('hud').style.display='block';
+  S.aktif=true;
+  pasangWatermark();
+  renderDiag();
+  showStep('step-apersepsi');
+}
+
+function lanjutMateri(){
+  for(let i=0;i<diagData.length;i++){
+    if(!document.querySelector(`input[name="diag${i}"]:checked`)){ showModal({icon:'📝',title:'Belum lengkap',body:`Soal nomor ${i+1} belum dijawab. Jawab ke-10 soal dulu ya!`}); return; }
+  }
+  tambahXP(10);
+  renderKuis(kuisA,'kuis-a-container','qa');
+  renderKuis(kuisB,'kuis-b-container','qb');
+  renderKuis(kuisC,'kuis-c-container','qc');
+  showStep('step-materi');
+  mulaiTimerMateri();
+}
+
+/* Timer membaca: hanya berkurang saat halaman terlihat (tahan throttle background) */
+let timerMateri=null, sisaMateri=CONFIG.WAKTU_MATERI, materiSelesai=false;
+function mulaiTimerMateri(){
+  if(timerMateri) return;
+  let last=Date.now();
+  timerMateri=setInterval(()=>{
+    const now=Date.now(), dt=(now-last)/1000; last=now;
+    if(document.hidden) return;
+    sisaMateri-=Math.min(dt,2);
+    $('timer-text').textContent=`⏳ Wajib membaca: ${fmt(sisaMateri)}`;
+    $('timer-bar').style.width=((CONFIG.WAKTU_MATERI-sisaMateri)/CONFIG.WAKTU_MATERI*100)+'%';
+    if(sisaMateri<=0){
+      clearInterval(timerMateri); materiSelesai=true;
+      $('timer-text').textContent='✅ Waktu baca selesai! Pastikan semua kuis terjawab.';
+      $('timer-materi').classList.add('ok');
+      $('btn-lanjut-simulasi').disabled=false;
+      $('teks-tunggu-materi').style.display='none';
+    }
+  },500);
+}
+
+function kumpulkanSemuaKuis(){
+  const kurang=['qa','qb','qc'].filter(p=>quizState[p].size<5).map(p=>'Bagian '+p[1].toUpperCase());
+  if(kurang.length){ showModal({icon:'📝',title:'Kuis belum lengkap',body:'Masih ada soal yang belum dijawab di: <b>'+kurang.join(', ')+'</b>.'}); return; }
+  showModal({icon:'🎉',title:'Materi Selesai!',body:'Luar biasa! Sekarang saatnya praktik di laboratorium simulasi.',ok:'Lanjut Simulasi ➔',onOk:()=>showStep('step-simulasi')});
+}
+
+function bukaSimulasi(){
+  if($('kode-simulasi').value.trim()===CONFIG.KODE_SIMULASI){
+    $('lock-simulasi').style.display='none'; $('konten-simulasi').style.display='block';
+  } else { $('error-simulasi').style.display='block'; }
+}
+
+/* ---------------- SIMULASI ---------------- */
+const sim={s1:{}, s2:false, s3:false};
+function tandaiSim(id){ const el=$(id); if(!el.classList.contains('done')){ el.classList.add('done'); tambahXP(20); } cekSimulasiLengkap(); }
+function cekSimulasiLengkap(){
+  const selesai = sim.s1.netral && sim.s1.bias && sim.s2 && sim.s3;
+  if(selesai){ const b=$('btn-lanjut-formatif'); b.disabled=false; b.textContent='🎯 Semua Simulasi Selesai, Lanjut Ujian Akhir ➔'; b.classList.add('green'); }
+}
+
+function simulasiData(){
+  const ds=$('sim-dataset').value, h=$('hasil-sim-data');
+  $('bars-data').style.display='block';
+  const l=$('b-l'), p=$('b-p');
+  const vL = ds==='bias'?95:92, vP = ds==='bias'?31:90;
+  l.style.width='0'; p.style.width='0'; l.classList.remove('low'); p.classList.remove('low');
+  setTimeout(()=>{ l.style.width=vL+'%'; l.textContent=vL+'%'; p.style.width=vP+'%'; p.textContent=vP+'%'; if(vP<50)p.classList.add('low'); },60);
+  if(ds==='bias'){ h.textContent='❌ GIGO! Dataset bias membuat AI diskriminatif terhadap kelompok yang kurang terwakili.'; h.style.color='#b91c1c'; }
+  else { h.textContent='✔️ Tepat! Dataset yang adil membuat AI lebih bijaksana untuk semua kelompok.'; h.style.color='#047857'; }
+  sim.s1[ds]=true;
+  if(!(sim.s1.netral&&sim.s1.bias)){ h.textContent+=' Sekarang coba dataset yang satunya!'; }
+  else tandaiSim('sim1');
+}
+
+function isiChat(t){ $('sim-chat').value=t; $('sim-chat').focus(); }
+function tambahBubble(cls,txt){ const d=document.createElement('div'); d.className='bubble '+cls; d.textContent=txt; $('chat-box').appendChild(d); $('chat-box').scrollTop=1e5; }
+function simulasiChat(){
+  const raw=$('sim-chat').value.trim(); if(!raw) return;
+  const p=raw.toLowerCase();
+  tambahBubble('me',raw); $('sim-chat').value='';
+  const sensitif=['nik','ktp','password','sandi','kata sandi','pin ','alamat rumah','nomor hp','no hp','rekening'].some(k=>p.includes(k));
+  setTimeout(()=>{
+    if(sensitif) tambahBubble('alert','⚠️ PERINGATAN! Kamu memasukkan data sensitif. Di AI publik, data ini bisa tersimpan di server dan disalahgunakan. Jangan pernah membagikannya!');
+    else tambahBubble('bot','🤖 Pesan ini aman diproses. Tetap ingat: verifikasi jawaban AI ke sumber terpercaya ya!');
+    if(!sim.s2){ sim.s2=true; tandaiSim('sim2'); }
+  },450);
+}
+
+function mulaiScan(){
+  const btn=$('btn-scan'); btn.style.display='none';
+  const stream=$('floating-cam').srcObject;
+  if(stream){ $('sim-video').srcObject=stream; $('scan-ph').style.display='none'; }
+  $('scan-ring').classList.add('run');
+  const lis=document.querySelectorAll('#scan-checks li');
+  lis.forEach((li,i)=>setTimeout(()=>li.classList.add('on'),900*(i+1)));
+  setTimeout(()=>{
+    $('scan-ring').classList.remove('run');
+    $('hasil-scan').style.display='block';
+    sim.s3=true; tandaiSim('sim3');
+  },900*(lis.length+1));
+}
+
+function lanjutFormatifLock(){ showStep('step-formatif'); }
+
+/* ---------------- UJIAN ---------------- */
+let timerUjian=null, akhirUjian=0, urutanUjian=[];
+
+function bukaFormatif(){
+  if($('kode-formatif').value.trim()===CONFIG.KODE_UJIAN){
+    $('lock-formatif').style.display='none'; $('konten-formatif').style.display='block';
+    mulaiUjian();
+  } else { $('error-formatif').style.display='block'; }
+}
+
+function renderUjian(){
+  urutanUjian=formatifData.map(it=>shuffle(it.o.map((_,i)=>i)));
+  $('formatif-container').innerHTML=formatifData.map((it,i)=>
+    `<div class="qcard"><p class="qtext"><b>${i+1}.</b> ${textHTML(it.q)}</p>${urutanUjian[i].map(oi=>optHTML('tf_'+i,oi,it.o[oi],i)).join('')}</div>`).join('');
+  $('formatif-container').querySelectorAll('input').forEach(x=>x.addEventListener('change',updateTerjawab));
+  updateTerjawab();
+}
+function jmlTerjawab(){ let n=0; for(let i=0;i<formatifData.length;i++) if(document.querySelector(`input[name="tf_${i}"]:checked`)) n++; return n; }
+function updateTerjawab(){ $('jml-terjawab').textContent=`${jmlTerjawab()} / ${formatifData.length} terjawab`; }
+function updatePelanggaranInfo(){ $('info-pelanggaran').textContent=`⚠ ${S.pelanggaran}/${CONFIG.MAX_PELANGGARAN}`; }
+
+function mulaiUjian(){
+  S.percobaan++;
+  renderUjian(); updatePelanggaranInfo();
+  akhirUjian=Date.now()+CONFIG.WAKTU_UJIAN*1000;
+  clearInterval(timerUjian);
+  const tick=()=>{
+    const sisa=(akhirUjian-Date.now())/1000;
+    const t=$('timer-ujian'); t.textContent='⏱ '+fmt(sisa); t.classList.toggle('danger',sisa<=300);
+    if(sisa<=0){ clearInterval(timerUjian); showModal({icon:'⌛',title:'Waktu Habis!',body:'Jawabanmu akan dikumpulkan otomatis.',onOk:()=>kumpulkanFormatif()}); }
+  };
+  tick(); timerUjian=setInterval(tick,500);
+  window.scrollTo(0,0);
+}
+
+function konfirmasiKumpul(){
+  const kosong=formatifData.length-jmlTerjawab();
+  if(kosong>0){
+    showModal({icon:'🤔',title:'Masih ada soal kosong',body:`<b>${kosong}</b> soal belum dijawab. Yakin mau mengumpulkan sekarang?`,ok:'Ya, Kumpulkan',onOk:kumpulkanFormatif,cancel:'Kembali Mengerjakan'});
+  } else kumpulkanFormatif();
+}
+
+function motivasiHTML({nilai=0,stat={},curang=false}={}){
+  const nm=esc((S.nama||'').trim().split(/\s+/)[0]||'Ananda');
+  if(curang){
+    return `<div class="motivasi curang"><h3>🌱 Pesan untuk ${nm}</h3>
+      <p>Ujian kali ini dibatalkan karena aturan pengawasan dilanggar. Tidak apa-apa, ini bukan akhir segalanya. Nilai yang jujur, sekecil apa pun, jauh lebih berharga daripada nilai tinggi yang diperoleh dengan cara yang tidak benar.</p>
+      <p>Hubungi gurumu, minta kesempatan lagi, dan siapkan diri dengan membaca ulang materi serta mengulang simulasi. Kamu pasti bisa! 💪</p></div>`;
+  }
+  let judul, isi;
+  if(nilai>=100){
+    judul=`🏆 Sempurna, ${nm}!`;
+    isi='Semua jawabanmu benar! Ini bukti kamu tidak sekadar menghafal, tetapi benar-benar paham cara kerja AI, bahaya deepfake, dan etika digital. Pertahankan semangat ini dan jadilah teman yang membantu orang lain bijak menggunakan AI.';
+  } else if(nilai>=90){
+    judul=`🌟 Luar biasa, ${nm}!`;
+    isi='Pemahamanmu sudah sangat kuat. Tinggal sedikit lagi menuju sempurna. Baca penjelasan pada soal yang masih keliru di bawah, lalu kamu siap menjadi pengguna AI yang kritis.';
+  } else if(nilai>=CONFIG.KKM){
+    judul=`👏 Hebat, ${nm}! Kamu tuntas!`;
+    isi='Kamu sudah memenuhi KKM dan itu hasil dari usahamu. Manfaatkan penjelasan di bawah untuk memperkuat bagian yang belum tepat, karena kesalahan adalah cara belajar yang paling efektif.';
+  } else {
+    judul=`💪 Tetap semangat, ${nm}!`;
+    isi='Terus belajar dan jangan menyerah. Baca kembali materi dan penjelasan jawaban, lalu coba lagi.';
+  }
+  const kuat=Object.keys(stat).filter(t=>stat[t].s===0);
+  const lemah=Object.keys(stat).filter(t=>stat[t].s>0);
+  const li=a=>a.map(t=>`<li>${esc(t)}</li>`).join('');
+  return `<div class="motivasi"><h3>${judul}</h3><p>${isi}</p>
+    <div class="mot-grid">
+      <div class="mot-col"><b>💪 Kekuatanmu</b>${kuat.length?`<ul>${li(kuat)}</ul>`:'Terus berlatih, kekuatanmu akan segera terlihat!'}</div>
+      <div class="mot-col"><b>🎯 Perlu diperkuat</b>${lemah.length?`<ul>${li(lemah)}</ul>`:'Tidak ada. Semua topik sudah kamu kuasai! 🎉'}</div>
+    </div>
+    <p class="mot-quote">AI hanyalah alat bantu, kamulah yang memegang kendali. Tetap kritis, tetap jujur, dan terus semangat belajar! 🚀</p></div>`;
+}
+
+function kumpulkanFormatif(){
+  clearInterval(timerUjian);
+  if(S.curang){
+    tampilRapor({nilai:0,lulus:false,curang:true,html:`<div class="feedback-item salah"><b>❌ Ujian dibatalkan:</b> ${esc(S.alasanCurang)}</div>`,motivasi:motivasiHTML({curang:true})});
+    return;
+  }
+  let benar=0, html='';
+  const stat={};
+  formatifData.forEach((it,i)=>{
+    const ans=document.querySelector(`input[name="tf_${i}"]:checked`);
+    const u=ans?parseInt(ans.value):-1;
+    const tp=it.t||'Umum';
+    stat[tp]=stat[tp]||{b:0,s:0};
+    const penj=it.e?`<div class="penjelasan">💡 <b>Penjelasan:</b> ${esc(it.e)}</div>`:'';
+    const tag=`<div class="topik-tag">${esc(tp)}</div>`;
+    if(u===it.a){
+      benar++; stat[tp].b++;
+      html+=`<div class="feedback-item benar"><b>Soal ${i+1}: ✔️ Benar</b>${tag}${penj}</div>`;
+    } else {
+      stat[tp].s++;
+      html+=`<div class="feedback-item salah"><b>Soal ${i+1}: ❌ ${u<0?'Tidak dijawab':'Salah'}</b>${tag}`+
+        (u>=0?`<div class="jwb-siswa">Jawabanmu: <i>${esc(it.o[u])}</i></div>`:'')+
+        `<div class="jwb-benar">Jawaban benar: <i>${esc(it.o[it.a])}</i></div>${penj}</div>`;
+    }
+  });
+  const nilai=Math.round(benar/formatifData.length*100);
+
+  if(nilai<CONFIG.KKM){
+    showModal({icon:'💪',title:`Nilaimu ${nilai}`,body:`Belum mencapai KKM (${CONFIG.KKM}). Jangan menyerah, setiap percobaan membuatmu makin paham! Baca lagi materinya, lalu kerjakan <b>remedial</b> dengan urutan opsi yang diacak ulang.`,ok:'Mulai Remedial',onOk:()=>mulaiUjian()});
+    return;
+  }
+  tambahXP(100);
+  tampilRapor({nilai,lulus:true,curang:false,html,motivasi:motivasiHTML({nilai,stat})});
+}
+
+function tampilRapor({nilai,lulus,curang,html,motivasi=''}){
+  clearInterval(timerMateri); clearInterval(timerUjian);
+  showStep('step-formatif');
+  $('lock-formatif').style.display='none';
+  $('konten-formatif').style.display='none';
+  $('hasil-akhir').style.display='block';
+  $('cetak-nama').textContent=`${S.nama} • Kelas ${S.kelas}`;
+  const box=$('rapor-box'), nl=$('teks-nilai');
+  box.classList.toggle('fail',!lulus);
+  nl.textContent=nilai; nl.style.color=lulus?'#047857':'#b91c1c';
+  $('rapor-judul').textContent=lulus?'🎓 Rapor Lulus PJJ Koding dan KA':'🚫 Ujian Dibatalkan';
+  $('rapor-status').textContent=lulus?`Status: TUNTAS (memenuhi KKM ${CONFIG.KKM})`:'Status: TIDAK TUNTAS - hubungi guru mapel';
+  const tgl=new Date().toLocaleString('id-ID',{dateStyle:'long',timeStyle:'short'});
+  $('rapor-meta').innerHTML=`<span>⭐ ${S.xp} XP • ${levelName()}</span><span>🔁 Percobaan ke-${S.percobaan}</span><span>⚠ Pelanggaran: ${S.pelanggaran}</span><span>🗓 ${tgl}</span>`;
+  $('feedback-container').innerHTML=html;
+  $('motivasi-box').innerHTML=motivasi;
+  S.aktif=false;
+  const st=$('floating-cam').srcObject;
+  if(st) st.getTracks().forEach(t=>t.stop());
+  $('floating-cam').style.display='none'; $('cam-label').style.display='none';
+  if(lulus) confetti();
+  window.scrollTo(0,0);
+  kirimRekap({nama:S.nama,kelas:S.kelas,nilai,lulus,percobaan:S.percobaan,pelanggaran:S.pelanggaran,xp:S.xp,waktu:tgl});
+}
+
+function kirimRekap(data){
+  if(!CONFIG.SCRIPT_URL) return;
+  try{ fetch(CONFIG.SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(data)}); }catch(e){}
+}
+
+/* ---------------- PENGAWASAN ---------------- */
+function dalamUjian(){ return $('konten-formatif').style.display==='block' && $('hasil-akhir').style.display!=='block' && !S.curang; }
+
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden || !S.aktif) return;
+  S.pelanggaran++;
+  if(dalamUjian()){
+    updatePelanggaranInfo();
+    if(S.pelanggaran>=CONFIG.MAX_PELANGGARAN){
+      S.curang=true; S.alasanCurang=`keluar dari halaman ujian sebanyak ${S.pelanggaran} kali.`;
+      showModal({icon:'🚨',title:'Ujian Dibatalkan',body:`Kamu telah keluar dari halaman ujian ${S.pelanggaran} kali. Nilai otomatis 0.`,onOk:kumpulkanFormatif});
+    } else {
+      showModal({icon:'🚨',title:'Pelanggaran Terdeteksi',body:`Kamu keluar dari halaman ujian. Pelanggaran <b>${S.pelanggaran} dari ${CONFIG.MAX_PELANGGARAN}</b>. ${S.pelanggaran===CONFIG.MAX_PELANGGARAN-1?'<b style="color:#b91c1c">PERINGATAN TERAKHIR!</b> Sekali lagi keluar, nilaimu langsung 0.':'Jika mencapai batas, nilaimu langsung 0.'}`,ok:'Saya Mengerti'});
+    }
+  } else {
+    if(CONFIG.NILAI_NOL_SELURUH_SESI && S.pelanggaran>=CONFIG.MAX_PELANGGARAN){
+      S.curang=true; S.alasanCurang=`meninggalkan halaman sebanyak ${S.pelanggaran} kali selama sesi PJJ.`;
+      showModal({icon:'🚨',title:'Sesi Dihentikan',body:`Kamu telah meninggalkan halaman ${S.pelanggaran} kali. Sesuai tata tertib, nilai otomatis <b>0</b>.`,onOk:kumpulkanFormatif});
+    } else if(CONFIG.NILAI_NOL_SELURUH_SESI){
+      const sisa=CONFIG.MAX_PELANGGARAN-S.pelanggaran;
+      showModal({icon:'⚠️',title:`Pelanggaran ${S.pelanggaran} dari ${CONFIG.MAX_PELANGGARAN}`,body:`Kamu meninggalkan halaman. ${sisa===1?'<b style="color:#b91c1c">PERINGATAN TERAKHIR!</b> Sekali lagi keluar, nilaimu langsung 0.':`Sisa kesempatan: <b>${sisa}</b>. Pada pelanggaran ke-${CONFIG.MAX_PELANGGARAN}, nilaimu langsung 0.`} Waktu baca tidak berjalan saat kamu keluar.`,ok:'Kembali Belajar'});
+    } else {
+      showModal({icon:'⚠️',title:'Pelanggaran Tercatat',body:'Sistem mencatat kamu meninggalkan halaman. Tetap fokus di halaman ini. Waktu baca tidak berjalan saat kamu keluar.',ok:'Kembali Belajar'});
+    }
+  }
+});
+
+function tindakKecurangan(){
+  if(dalamUjian()){
+    S.curang=true; S.alasanCurang='mencoba menyalin (copy) soal ujian.';
+    showModal({icon:'🚨',title:'Peringatan Keras!',body:'Kamu mencoba menyalin soal. Ujian dibatalkan dan nilai otomatis 0.',onOk:kumpulkanFormatif});
+  }
+}
+function blokir(e){
+  const t=e.target;
+  if(t && (t.tagName==='INPUT'||t.tagName==='TEXTAREA') && e.type!=='contextmenu') return;
+  e.preventDefault(); tindakKecurangan();
+}
+['contextmenu','copy','cut'].forEach(ev=>document.addEventListener(ev,blokir));
+document.addEventListener('keydown',e=>{
+  const k=(e.key||'').toLowerCase();
+  const ctrl=e.ctrlKey||e.metaKey;
+  if((ctrl&&['c','u','s','a'].includes(k)) || e.key==='F12' || (ctrl&&e.shiftKey&&['i','j','c'].includes(k))){
+    e.preventDefault(); tindakKecurangan();
+  }
+});
+document.addEventListener('dragstart',e=>e.preventDefault());
+
+/* ---------------- ANTI SCREENSHOT (penghalang, bukan pemblokir mutlak) ---------------- */
+function pasangWatermark(){
+  if(!CONFIG.ANTI_SCREENSHOT) return;
+  const t=`${S.nama} • ${S.kelas} • ${new Date().toLocaleString('id-ID')}`;
+  const svg=`<svg xmlns='http://www.w3.org/2000/svg' width='380' height='230'><text x='20' y='150' transform='rotate(-25 20 150)' font-family='Arial,sans-serif' font-size='15' font-weight='700' fill='rgba(79,70,229,0.14)'>${esc(t)}</text></svg>`;
+  $('wm').style.backgroundImage=`url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
+  $('wm').style.display='block';
+}
+function pelanggaranUjian(pesan){
+  S.pelanggaran++; updatePelanggaranInfo();
+  if(S.pelanggaran>=CONFIG.MAX_PELANGGARAN){
+    S.curang=true; S.alasanCurang=pesan+' (batas pelanggaran tercapai).';
+    showModal({icon:'🚨',title:'Ujian Dibatalkan',body:`${pesan}. Pelanggaran mencapai ${S.pelanggaran}. Nilai otomatis 0.`,onOk:kumpulkanFormatif});
+  } else {
+    showModal({icon:'📵',title:'Pelanggaran Terdeteksi',body:`${pesan}. Pelanggaran <b>${S.pelanggaran} dari ${CONFIG.MAX_PELANGGARAN}</b>.`,ok:'Saya Mengerti'});
+  }
+}
+function lindungiLayar(ms){
+  document.body.classList.add('shield');
+  setTimeout(()=>{ if(document.hasFocus()) document.body.classList.remove('shield'); },ms);
+}
+if(CONFIG.ANTI_SCREENSHOT){
+  // Jendela kehilangan fokus (snipping tool, split screen, overlay) -> konten dikaburkan selama ujian/belajar
+  window.addEventListener('blur',()=>{ if(S.aktif) document.body.classList.add('shield'); });
+  window.addEventListener('focus',()=>document.body.classList.remove('shield'));
+  // Tombol PrintScreen (Windows/Linux): kosongkan clipboard + kaburkan sesaat
+  document.addEventListener('keyup',e=>{
+    if(e.key==='PrintScreen' && S.aktif){
+      try{ navigator.clipboard.writeText(' '); }catch(_){}
+      lindungiLayar(1500);
+      if(dalamUjian()) pelanggaranUjian('Terdeteksi menekan tombol PrintScreen');
+    }
+  });
+  document.addEventListener('keydown',e=>{
+    // Win+Shift+S, Cmd+Shift+3/4/5
+    if(S.aktif && ((e.shiftKey&&e.metaKey&&['s','3','4','5'].includes((e.key||'').toLowerCase())))){
+      e.preventDefault(); lindungiLayar(1500);
+      if(dalamUjian()) pelanggaranUjian('Terdeteksi pintasan screenshot');
+    }
+  });
+}
+
+window.addEventListener('beforeunload',e=>{ if(S.aktif){ e.preventDefault(); e.returnValue=''; } });
+</script>
+</body>
+</html>
